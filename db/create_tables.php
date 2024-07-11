@@ -15,9 +15,9 @@ $create_symbols_table = "CREATE TABLE IF NOT EXISTS symbols (
 
 $create_pricelast_table = "CREATE TABLE IF NOT EXISTS price_last (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    last numeric,
-    volume numeric NOT NULL,
-    quote_volume NUMERIC NOT NULL,
+    last DECIMAL(10,2),
+    volume DECIMAL(10,8) NOT NULL,
+    quote_volume DECIMAL(10,2) NOT NULL,
     symbol VARCHAR(36),
     exchange_name VARCHAR(36),
     PRIMARY KEY (symbol),

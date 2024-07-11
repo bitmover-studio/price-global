@@ -1,4 +1,5 @@
 <?php
+require_once(__DIR__ . '/../db/price.php');
 
 function GetPriceFromBody($body, $exchange, $symbol)
 {
@@ -18,9 +19,9 @@ function GetPriceFromBody($body, $exchange, $symbol)
                 return $price;
             }
             $modifiedResponse = array(
-                "Last" => $responseObject["lastPrice"],
-                "Volume" => $responseObject["volume"],
-                "QuoteVolume" => $responseObject["quoteVolume"]
+                "Last" => floatval($responseObject["lastPrice"]),
+                "Volume" => floatval($responseObject["volume"]),
+                "QuoteVolume" => floatval($responseObject["quoteVolume"])
             );
 
             $price["Last"] = $modifiedResponse["Last"];
@@ -57,9 +58,9 @@ function GetPriceFromBody($body, $exchange, $symbol)
                 return $price;
             }
             $modifiedResponse = array(
-                "Last" => $responseObject["payload"]["last"],
-                "Volume" => $responseObject["payload"]["volume"],
-                "QuoteVolume" => $responseObject["payload"]["vwap"]
+                "Last" => (float)$responseObject["payload"]["last"],
+                "Volume" => (float)$responseObject["payload"]["volume"],
+                "QuoteVolume" => (float)$responseObject["payload"]["vwap"]
             );
 
             $price["Last"] = $modifiedResponse["Last"];
@@ -74,9 +75,9 @@ function GetPriceFromBody($body, $exchange, $symbol)
                 return $price;
             }
             $modifiedResponse = array(
-                "Last" => $responseObject["last_trade"],
-                "Volume" => $responseObject["rolling_24_hour_volume"],
-                "QuoteVolume" => $responseObject["last_trade"] * $responseObject["rolling_24_hour_volume"]
+                "Last" => (float)$responseObject["last_trade"],
+                "Volume" => (float)$responseObject["rolling_24_hour_volume"],
+                "QuoteVolume" => (float)$responseObject["last_trade"] * $responseObject["rolling_24_hour_volume"]
             );
 
             $price["Last"] = $modifiedResponse["Last"];

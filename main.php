@@ -1,7 +1,6 @@
 <?php
-require_once "./db/db_connection.php";
-require_once "./db/create_tables.php";
-require_once "./worker/worker.php";
+require_once(__DIR__ . "/db/db_connection.php");
+require_once(__DIR__ . "/db/create_tables.php");
 
 $table_creation_queries = [
     $create_exchanges_table,
