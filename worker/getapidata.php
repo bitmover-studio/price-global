@@ -89,7 +89,7 @@ function GetPriceFromBody($body, $exchange, $symbol)
             echo "No exchange found on switch case" . "exchange" . $exchange;
     }
 
-    echo "GetPriceFromBody: exchange = " . $exchange . ", symbol = " . $symbol . ", priceToCreate = " . print_r($price, true);
+    echo "GetPriceFromBody: exchange = " . $exchange . ", symbol = " . $symbol . ", priceToUpdate = " . print_r($price, true);
 
     return $price;
 }
@@ -121,5 +121,87 @@ function fetchDataFromEndpoints($exchanges)
 
             UpdateLast($price["Last"], $price["Volume"], $price["QuoteVolume"], $price["Symbol"], $price["Exchange"]);
         }
+    }
+}
+
+// Rates
+function GetRatesFromBody($body, $name, $fiat)
+{
+    switch ($name) {
+        case "Central Bank":
+            $responseObject = json_decode($body, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                error_log("Unmarshal error" . ["fiat rates" => $name, "err" => json_last_error_msg()]);
+                return ["err" => json_last_error_msg()];
+            }
+            foreach ($responseObject as $currency => $rate) {
+                $newRate = [
+                    "Last" => (float)$rate,
+                    "Fiat" => substr($currency, 3),
+                    "Source" => $name
+                ];
+                if (!$responseObject) {
+                    error_log("Failed to insert fiat rate" . ["fiat" => $newRate["Fiat"], "err" => $newRate["err"]]);
+                }
+                //Create Symbol if it doesn't exists
+                createSymbol($newRate['Fiat']);
+                insertFiatRate($newRate["Last"], $newRate['Fiat'], $name);
+            }
+            echo "GetRatesFromBody: exchange = " . $name . ", rateToInsert = " . print_r($name, true);
+            break;
+
+        case "Dolar Blue":
+            $responseObject = json_decode($body, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                error_log("Unmarshal error" . ["exchange" => $name, "err" => json_last_error_msg()]);
+                return ["err" => json_last_error_msg()];
+            }
+            $newRate = [
+                "Last" => (float)$responseObject["compra"],
+                "Fiat" => $fiat,
+                "Source" => $name
+            ];
+            insertFiatRate($newRate["Last"], $newRate['Fiat'], $name);
+            echo "GetRatesFromBody: exchange = " . $name . "Last: " . $newRate['Last'] . ", rateToInsert = " . print_r($newRate['Fiat'], true);
+            break;
+
+        case "Dolar Paralelo":
+            $responseObject = json_decode($body, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                error_log("Unmarshal error" . ["exchange" => $name, "err" => json_last_error_msg()]);
+                return ["err" => json_last_error_msg()];
+            }
+            $newRate = [
+                "Last" => (float)$responseObject["promedio"],
+                "Fiat" => $fiat,
+                "Source" => $name
+            ];
+            insertFiatRate($newRate["Last"], $newRate['Fiat'], $name);
+            echo "GetRatesFromBody: exchange = " . $name . "Last: " . $newRate['Last'] . ", rateToInsert = " . print_r($newRate['Fiat'], true);
+            break;
+
+        default:
+            error_log("No exchange found on switch case" . ["exchange" => $name]);
+    };
+}
+
+function fetchRatesFromEndpoints($rates)
+{
+    foreach ($rates as $rate) {
+        $name = $rate["Name"];
+        $symbol = $rate["Fiat"];
+        $endpoint = $rate["Endpoint"];
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $endpoint);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        if ($response === false) {
+            echo "Failed to fetch data from endpoint" . "endpoint" . $endpoint;
+            continue;
+        }
+        GetRatesFromBody($response, $name, $symbol);
     }
 }

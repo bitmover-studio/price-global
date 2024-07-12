@@ -25,4 +25,13 @@ $create_pricelast_table = "CREATE TABLE IF NOT EXISTS price_last (
     FOREIGN KEY (symbol) REFERENCES symbols(symbol)
 )";
 
+$create_fiat_rates_table = "CREATE TABLE IF NOT EXISTS fiat_rates (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last DECIMAL(10,2),
+    fiat VARCHAR(36) NOT NULL,
+    source text NOT NULL,
+    FOREIGN KEY (fiat) REFERENCES symbols(symbol)
+)";
+
 $create_index = "ALTER TABLE price_last ADD INDEX price_last_symbol_created_at_last_idx (symbol, created_at, last);";

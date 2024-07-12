@@ -36,19 +36,36 @@ function createSymbol($name)
 function UpdateLast($last, $volume, $quote_volume, $symbol, $exchange)
 {
     global $conn;
-    $insertQuery = "INSERT INTO price_last
-        (last, volume, quote_volume, symbol, exchange_name)
-    VALUES
-        ('$last', '$volume', '$quote_volume', '$symbol', '$exchange')
-        ON DUPLICATE KEY UPDATE
-            last = VALUES(last),
-            volume = VALUES(volume),
-            quote_volume = VALUES(quote_volume),
-            created_at = NOW()";
+    $insertQuery = "INSERT INTO price_last (last, volume, quote_volume, symbol, exchange_name)
+                    VALUES (?, ?, ?, ?, ?)
+                    ON DUPLICATE KEY UPDATE
+                        last = VALUES(last),
+                        volume = VALUES(volume),
+                        quote_volume = VALUES(quote_volume),
+                        created_at = NOW()";
 
-    if ($conn->query($insertQuery) === TRUE) {
+    $stmt = $conn->prepare($insertQuery);
+    $stmt->bind_param("dddss", $last, $volume, $quote_volume, $symbol, $exchange);
+
+    if ($stmt->execute()) {
         echo "Record updated successfully";
     } else {
-        echo "Error updating record: " . $conn->error;
+        echo "Error updating record: " . $stmt->error;
     }
+    $stmt->close();
+}
+
+function insertFiatRate($last, $fiat, $source)
+{
+    global $conn;
+    $insertQuery = "INSERT INTO fiat_rates (last, fiat, source) VALUES (?, ?, ?)";
+    $stmt = $conn->prepare($insertQuery);
+    $stmt->bind_param("dss", $last, $fiat, $source);
+
+    if ($stmt->execute()) {
+        echo "Rates " . $fiat . " " . $last . " Record inserted successfully";
+    } else {
+        echo "Error inserting record: " . $stmt->error;
+    }
+    $stmt->close();
 }

@@ -5,7 +5,8 @@ require_once(__DIR__ . "/db/create_tables.php");
 $table_creation_queries = [
     $create_exchanges_table,
     $create_symbols_table,
-    $create_pricelast_table
+    $create_pricelast_table,
+    $create_fiat_rates_table
 ];
 
 // Function to create tables

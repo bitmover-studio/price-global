@@ -29,7 +29,7 @@ function GetExchanges() {
     $LunoSymbols = array(
         "NGN" => "https://api.luno.com/api/1/ticker?pair=XBTNGN",
         "ZAR" => "https://api.luno.com/api/1/ticker?pair=XBTZAR",
-        "IDR" => "https://api.luno.com/api/1/ticker?pair=XBTIDR",
+        // "IDR" => "https://api.luno.com/api/1/ticker?pair=XBTIDR", returned 99999999999 check later
     );
 
     $exchanges = array(
@@ -60,4 +60,31 @@ function GetExchanges() {
     );
 
     return $exchanges;
+}
+
+function GetRates(): array {
+    $defaultInterval = 21600; // 21600 sec = 6 hours (Free API key limit)
+
+    $rates = [
+        [
+            'Name' => 'Central Bank',
+            'Endpoint' => 'https://bitcoindata.science/api/fiat_rates.php',
+            'Interval' => $defaultInterval,
+            'Fiat' => 'All',
+        ],
+        [
+            'Name' => 'Dolar Blue',
+            'Endpoint' => 'https://dolarapi.com/v1/dolares/blue',
+            'Interval' => $defaultInterval,
+            'Fiat' => 'ARS',
+        ],
+        [
+            'Name' => 'Dolar Paralelo',
+            'Endpoint' => 'https://ve.dolarapi.com/v1/dolares/paralelo',
+            'Interval' => $defaultInterval,
+            'Fiat' => 'VES',
+        ],
+    ];
+
+    return $rates;
 }
