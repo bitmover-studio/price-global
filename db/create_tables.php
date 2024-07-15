@@ -34,4 +34,20 @@ $create_fiat_rates_table = "CREATE TABLE IF NOT EXISTS fiat_rates (
     FOREIGN KEY (fiat) REFERENCES symbols(symbol)
 )";
 
-$create_index = "ALTER TABLE price_last ADD INDEX price_last_symbol_created_at_last_idx (symbol, created_at, last);";
+$create_price_hist_table = "CREATE TABLE IF NOT EXISTS price_hist (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last DECIMAL(10,2),
+    volume DECIMAL(10,8) NOT NULL,
+    quote_volume DECIMAL(10,2) NOT NULL,
+    symbol VARCHAR(36),
+    exchange_name VARCHAR(36),
+    FOREIGN KEY (exchange_name) REFERENCES exchanges(name),
+    FOREIGN KEY (symbol) REFERENCES symbols(symbol)
+)";
+
+$indexes = [
+    "ALTER TABLE price_last ADD INDEX price_last_symbol_created_at_last_idx (symbol, created_at, last);",
+    "ALTER TABLE price_hist ADD INDEX price_hist_created_at_idx (created_at);",
+    "ALTER TABLE price_hist ADD INDEX price_hist_symbol_created_at_last_idx (symbol, created_at, last);"
+];

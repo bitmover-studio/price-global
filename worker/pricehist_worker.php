@@ -2,11 +2,11 @@
 require_once "exchanges.php";
 require_once "getapidata.php";
 
-function StartPoolingLoop() {
+function StartInserting() {
     $exchanges = GetExchanges();
     
-    fetchDataFromEndpoints($exchanges,false);
+    fetchDataFromEndpoints($exchanges,true);
 }
 
 // Worker to update price_last
-StartPoolingLoop();
+StartInserting();

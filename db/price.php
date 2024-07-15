@@ -55,6 +55,23 @@ function UpdateLast($last, $volume, $quote_volume, $symbol, $exchange)
     $stmt->close();
 }
 
+function insertPriceHist($last, $volume, $quote_volume, $symbol, $exchange)
+{
+    global $conn;
+    $insertQuery = "INSERT INTO price_hist (last, volume, quote_volume, symbol, exchange_name)
+                    VALUES (?, ?, ?, ?, ?)";
+
+    $stmt = $conn->prepare($insertQuery);
+    $stmt->bind_param("dddss", $last, $volume, $quote_volume, $symbol, $exchange);
+
+    if ($stmt->execute()) {
+        echo "Record updated successfully";
+    } else {
+        echo "Error updating record: " . $stmt->error;
+    }
+    $stmt->close();
+}
+
 function insertFiatRate($last, $fiat, $source)
 {
     global $conn;

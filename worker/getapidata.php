@@ -94,7 +94,7 @@ function GetPriceFromBody($body, $exchange, $symbol)
     return $price;
 }
 
-function fetchDataFromEndpoints($exchanges)
+function fetchDataFromEndpoints($exchanges,$insert)
 {
     foreach ($exchanges as $exchange) {
         $symbolsAndEndpoints = $exchange["SymbolsAndEndpoints"];
@@ -120,6 +120,10 @@ function fetchDataFromEndpoints($exchanges)
             createSymbol($symbol);
 
             UpdateLast($price["Last"], $price["Volume"], $price["QuoteVolume"], $price["Symbol"], $price["Exchange"]);
+            
+            if ($insert === true) {
+              insertPriceHist ($price["Last"], $price["Volume"], $price["QuoteVolume"], $price["Symbol"], $price["Exchange"]);
+            }
         }
     }
 }

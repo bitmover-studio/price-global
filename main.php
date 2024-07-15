@@ -6,7 +6,8 @@ $table_creation_queries = [
     $create_exchanges_table,
     $create_symbols_table,
     $create_pricelast_table,
-    $create_fiat_rates_table
+    $create_fiat_rates_table,
+    $create_price_hist_table
 ];
 
 // Function to create tables
@@ -23,13 +24,15 @@ function create_tables($conn, $queries)
 
 create_tables($conn, $table_creation_queries);
 
-// Execute the query to add indexes
-try {
-    $conn->query($create_index);
-} catch (mysqli_sql_exception $ex) {
-    if ($ex->getCode() == 1061) {
-        echo 'Index already exists';
-    } else {
-        echo 'Error adding index: ' . $ex->getMessage();
+// Execute the queries to add indexes
+foreach ($indexes as $index) {
+    try {
+        $conn->query($index);
+    } catch (mysqli_sql_exception $ex) {
+        if ($ex->getCode() == 1061) {
+            echo 'Index already exists' . $query . '<br>';
+        } else {
+            echo 'Error adding index: ' . $ex->getMessage();
+        }
     }
 }
