@@ -161,7 +161,7 @@ function GetRatesFromBody($body, $name, $fiat)
                 return ["err" => json_last_error_msg()];
             }
             $newRate = [
-                "Last" => (float)$responseObject["compra"],
+                "Last" => (float)$responseObject["venta"],
                 "Fiat" => $fiat,
                 "Source" => $name
             ];

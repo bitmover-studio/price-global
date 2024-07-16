@@ -26,13 +26,13 @@ function generateJsonFromQuery($query)
 $query = "SELECT
     fiat as Fiat,
     last as Last,
-    source as Source
-    created_at AS Created,
+    source as Source,
+    created_at AS Created
 FROM
     (
         SELECT
             *,
-            ROW_NUMBER() OVER (PARTITION BY fiat, source ORDER BY created_at ASC) AS rn
+            ROW_NUMBER() OVER (PARTITION BY fiat, source ORDER BY created_at DESC) AS rn
         FROM
             fiat_rates
         WHERE
