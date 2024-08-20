@@ -65,7 +65,7 @@ function insertPriceHist($last, $volume, $quote_volume, $symbol, $exchange)
     $stmt->bind_param("dddss", $last, $volume, $quote_volume, $symbol, $exchange);
 
     if ($stmt->execute()) {
-        echo "Record updated successfully";
+        echo "Record inserted successfully";
     } else {
         echo "Error updating record: " . $stmt->error;
     }

@@ -29,7 +29,7 @@ function GetExchanges() {
     $LunoSymbols = array(
         "NGN" => "https://api.luno.com/api/1/ticker?pair=XBTNGN",
         "ZAR" => "https://api.luno.com/api/1/ticker?pair=XBTZAR",
-        // "IDR" => "https://api.luno.com/api/1/ticker?pair=XBTIDR", returned 99999999999 check later
+        "IDR" => "https://api.luno.com/api/1/ticker?pair=XBTIDR"
     );
 
     $exchanges = array(
@@ -73,8 +73,8 @@ function GetRates(): array {
             'Fiat' => 'All',
         ],
         [
-            'Name' => 'Dolar Blue',
-            'Endpoint' => 'https://dolarapi.com/v1/dolares/blue',
+            'Name' => 'Dolar Bolsa',
+            'Endpoint' => 'https://dolarapi.com/v1/dolares/bolsa',
             'Interval' => $defaultInterval,
             'Fiat' => 'ARS',
         ],
