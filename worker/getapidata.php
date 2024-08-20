@@ -151,10 +151,10 @@ function GetRatesFromBody($body, $name, $fiat)
                 createSymbol($newRate['Fiat']);
                 insertFiatRate($newRate["Last"], $newRate['Fiat'], $name);
             }
-            echo "GetRatesFromBody: exchange = " . $name . ", rateToInsert = " . print_r($name, true);
+            echo "GetRatesFromBody: exchange = " . $name . ", rateToInsert = " . print_r($name, true) . "<br>";
             break;
 
-        case "Dolar Blue":
+        case "Dolar Bolsa":
             $responseObject = json_decode($body, true);
             if (json_last_error() !== JSON_ERROR_NONE) {
                 error_log("Unmarshal error" . ["exchange" => $name, "err" => json_last_error_msg()]);
@@ -166,7 +166,7 @@ function GetRatesFromBody($body, $name, $fiat)
                 "Source" => $name
             ];
             insertFiatRate($newRate["Last"], $newRate['Fiat'], $name);
-            echo "GetRatesFromBody: exchange = " . $name . "Last: " . $newRate['Last'] . ", rateToInsert = " . print_r($newRate['Fiat'], true);
+            echo "GetRatesFromBody: exchange = " . $name . "Last: " . $newRate['Last'] . ", rateToInsert = " . print_r($newRate['Fiat'], true) . "<br>";
             break;
 
         case "Dolar Paralelo":
@@ -181,7 +181,7 @@ function GetRatesFromBody($body, $name, $fiat)
                 "Source" => $name
             ];
             insertFiatRate($newRate["Last"], $newRate['Fiat'], $name);
-            echo "GetRatesFromBody: exchange = " . $name . "Last: " . $newRate['Last'] . ", rateToInsert = " . print_r($newRate['Fiat'], true);
+            echo "GetRatesFromBody: exchange = " . $name . "Last: " . $newRate['Last'] . ", rateToInsert = " . print_r($newRate['Fiat'], true) . "<br>";
             break;
 
         default:
