@@ -15,9 +15,9 @@ $create_symbols_table = "CREATE TABLE IF NOT EXISTS symbols (
 
 $create_pricelast_table = "CREATE TABLE IF NOT EXISTS price_last (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    last DECIMAL(10,2),
-    volume DECIMAL(10,8) NOT NULL,
-    quote_volume DECIMAL(10,2) NOT NULL,
+    last DECIMAL(16,2),
+    volume DECIMAL(14,8) NOT NULL,
+    quote_volume DECIMAL(16,2) NOT NULL,
     symbol VARCHAR(36),
     exchange_name VARCHAR(36),
     PRIMARY KEY (symbol),
@@ -28,7 +28,7 @@ $create_pricelast_table = "CREATE TABLE IF NOT EXISTS price_last (
 $create_fiat_rates_table = "CREATE TABLE IF NOT EXISTS fiat_rates (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    last DECIMAL(10,2),
+    last DECIMAL(16,2),
     fiat VARCHAR(36) NOT NULL,
     source text NOT NULL,
     FOREIGN KEY (fiat) REFERENCES symbols(symbol)
@@ -37,9 +37,9 @@ $create_fiat_rates_table = "CREATE TABLE IF NOT EXISTS fiat_rates (
 $create_price_hist_table = "CREATE TABLE IF NOT EXISTS price_hist (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    last DECIMAL(10,2),
-    volume DECIMAL(10,8) NOT NULL,
-    quote_volume DECIMAL(10,2) NOT NULL,
+    last DECIMAL(16,2),
+    volume DECIMAL(14,8) NOT NULL,
+    quote_volume DECIMAL(16,2) NOT NULL,
     symbol VARCHAR(36),
     exchange_name VARCHAR(36),
     FOREIGN KEY (exchange_name) REFERENCES exchanges(name),
