@@ -1,0 +1,28 @@
+services:
+  php:
+    build: .
+    image: php:8.1-apache
+    ports:
+      - 80:80
+    volumes:
+      - .:/var/www/html
+    working_dir: /var/www/html/
+    restart: unless-stopped
+    environment:
+      - DB_PASS=${DB_PASS}
+      - DB_NAME=${DB_NAME}
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+    depends_on:
+      - bitcoin-price-globaldb
+
+  bitcoin-price-globaldb:
+    image: mariadb:10.6.17
+    environment:
+      - "MYSQL_DATABASE=bitcoin-price-globaldb"
+      - "MYSQL_USER=postgres"
+      - "MYSQL_PASSWORD=secret"
+      - "MYSQL_ROOT_PASSWORD=secret"
+    ports:
+      - "3306:3306"
+    command: ["--user=mysql"]

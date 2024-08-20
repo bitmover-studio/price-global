@@ -1,1 +1,9 @@
 .env
+data/mariadb-data/.my-healthcheck.cnf
+data/mariadb-data/aria_log_control
+data/mariadb-data/aria_log.00000001
+data/mariadb-data/ib_buffer_pool
+data/mariadb-data/ib_logfile0
+data/mariadb-data/ibdata1
+data/mariadb-data/multi-master.info
+data/mariadb-data/mysql_upgrade_info
