@@ -7,13 +7,20 @@ function generateJsonFromQuery($query)
     // Execute the SQL query
     $result = $conn->query($query);
 
+    if (!$result) {
+        // Handle query error
+        http_response_code(500);
+        echo json_encode(["error" => "Database query failed"]);
+        exit;
+    }
+
     // Fetch the results and store them in an array
     $data = array();
     while ($row = $result->fetch_assoc()) {
         $row['last'] = (float)$row['last'];
-        $row['created_at'] = date('Y-m-d H:i:s', strtotime($row['created_at']));
         $row['fiat_rate'] = (float)$row['fiat_rate'];
-        $row['create_at_fiat'] = date('Y-m-d H:i:s', strtotime($row['create_at_fiat']));
+        $row['created_at'] = (int)$row['created_at'];
+        $row['create_at_fiat'] = (int)$row['create_at_fiat'];
         $data[] = $row;
     }
 
@@ -30,20 +37,26 @@ $currency = isset($_GET['currency']) ? $_GET['currency'] : 'USD';
 // SQL query to retrieve data
 if ($currency === 'USD') {
     $query = "SELECT
-        pl.created_at, pl.last, pl.volume, pl.exchange_name,
-        NOW() as create_at_fiat, 'USD' as fiat, 1 as fiat_rate, 'Central Bank' as source
+         UNIX_TIMESTAMP(pl.created_at) AS created_at, pl.last, pl.volume, pl.exchange_name,
+        UNIX_TIMESTAMP(NOW()) as create_at_fiat, 'USD' as fiat, 1 as fiat_rate, 'Central Bank' as source
     FROM
         `price_last` pl
     WHERE
         pl.symbol = 'USD';";
 } else {
     $query = "SELECT
-        pl.created_at, pl.last, pl.volume, pl.exchange_name,
-        fr.create_at_fiat, fr.fiat, fr.fiat_rate, fr.source
+        UNIX_TIMESTAMP(pl.created_at) AS created_at,
+        pl.last,
+        pl.volume,
+        pl.exchange_name,
+        UNIX_TIMESTAMP(fr.create_at_fiat) AS create_at_fiat,
+        fr.fiat,
+        fr.fiat_rate,
+        fr.source
     FROM
         `price_last` pl
     JOIN (
-        SELECT created_at as create_at_fiat, fiat, last as fiat_rate, source
+        SELECT created_at AS create_at_fiat, fiat, last AS fiat_rate, source
         FROM `fiat_rates`
         WHERE fiat = '$currency'
         ORDER BY created_at DESC
